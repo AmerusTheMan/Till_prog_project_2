@@ -68,7 +68,7 @@ ai = Network(
     layers = [5, 20, 20, 20, 1],
     model_path="./model_temp.pkl"
 )
-ai_certanty_threshold = 0.8
+ai_certanty_threshold = 0.8 # how certain the ai has to be to make an action
 
 #move pads to correct positions
 pad1.rect.center = (pad_screen_distance, screen_height/2)
@@ -153,14 +153,14 @@ def draw_screen():
     pygame.display.flip()
 
 
-def run_game(collect_data=False, max_set_size_GB=5, clear_data=True):
-    """Run the pong game.
-
-        Keyword arguments:\n
-        collect_data -- if the game should collect data or play normally (default: False)\n
-        max_set_size_GB -- max gigabytes per set saved (default: 5)\n
-        clear_data -- if all previously collected data should be erased before collecting new data (default: True)\n
+def run_game(collect_data=False, max_set_size_GB=1, clear_data=True):
+    """Run the pong game
+    
+    :param colect_data: if the game should collect data or play normally (default: False)
+    :param max_set_size_GB: max gigabytes per set saved (default: 1)
+    :param clear_data: if all previously collected data should be erased before collecting new data (default: True)
     """
+
     if collect_data == True:
         if clear_data: clear_collected_data()
         max_bytes = round((1024**3) * max_set_size_GB)
@@ -217,7 +217,7 @@ def run_game(collect_data=False, max_set_size_GB=5, clear_data=True):
                 pad2.move(1)
             #print(round(ai_action, 4))
 
-            # Move point the ball in a random direction if it foes past pad1. Used to test whether the ai can handle multiple dirs
+            # Point the ball in a random direction if it foes past pad1. Used to test whether the ai can handle multiple directions
             if ball.rect.centerx < pad_screen_distance:
                 ball.set_direction(random_dir())
                 while ball.rect.centerx < pad_screen_distance:
@@ -256,7 +256,7 @@ def run_game(collect_data=False, max_set_size_GB=5, clear_data=True):
                     data_size = 0
                     n_sets_saved += 1
 
-                # Add current collection and it's result to current set
+                # Add current_collection and it's result to current set
                 data["collections"].append(arr)
                 data["results"].append(normalize_y_coord(ball.rect.centery))
                 data_size += collection_size

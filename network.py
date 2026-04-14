@@ -44,19 +44,6 @@ class Network:
         return 1 / (1 + np.exp(-1 * layer))
 
 
-    def __cost(self, y_hat, y) -> float:
-        """ Calculate the cost of the model
-
-        :param y_hat: predicted output by ai
-        :param y: expected output
-        :return: Total cost
-        """
-        eps = 1e-15  # small constant to avoid log(0)
-        y_hat = np.clip(y_hat, eps, 1 - eps)
-        losses = - ( (y * np.log(y_hat)) + (1 - y)*np.log(1 - y_hat) )
-        m = y_hat.reshape(-1).shape[0]
-        summed_losses = (1 / m) * np.sum(losses, axis=1)
-        return np.sum(summed_losses)
 
 
     def __backprop(self, y, m, cache):
@@ -143,6 +130,21 @@ class Network:
 
 
         return cache
+
+    def cost(self, y_hat, y) -> float:
+        """ Calculate the cost of the model
+
+        :param y_hat: predicted output by ai
+        :param y: expected output
+        :return: Total cost
+        """
+        eps = 1e-15  # small constant to avoid log(0)
+        y_hat = np.clip(y_hat, eps, 1 - eps)
+        losses = - ( (y * np.log(y_hat)) + (1 - y)*np.log(1 - y_hat) )
+        m = y_hat.reshape(-1).shape[0]
+        summed_losses = (1 / m) * np.sum(losses, axis=1)
+        return np.sum(summed_losses)
+
 
 
     def train(self, input_data, keys, m, epochs, alpha=0.1, model_save_directory="./", model_name="model_temp.pkl"):
